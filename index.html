@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Words</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- LEFT: document library -->
+  <aside id="library">
+    <header class="lib-header">
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 128 128" width="22" height="22" aria-hidden="true">
+          <rect width="128" height="128" rx="28" fill="#1a73e8"/>
+          <rect x="28" y="22" width="72" height="84" rx="8" fill="#fff"/>
+          <rect x="38" y="54" width="52" height="4" rx="2" fill="#1a73e8"/>
+          <rect x="38" y="66" width="52" height="4" rx="2" fill="#5f6368"/>
+          <rect x="38" y="78" width="38" height="4" rx="2" fill="#5f6368"/>
+          <rect x="38" y="90" width="46" height="4" rx="2" fill="#5f6368"/>
+        </svg>
+        <span class="brand-name">Words</span>
+      </div>
+      <button id="newDocBtn" class="primary-btn" title="New document">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        New
+      </button>
+    </header>
+    <div class="lib-search">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="searchInput" type="text" placeholder="Search documents" autocomplete="off">
+    </div>
+    <div id="docList" class="doc-list"></div>
+    <footer class="lib-footer">
+      <span id="docCount">0 documents</span>
+    </footer>
+  </aside>
+
+  <!-- MIDDLE: AI chat -->
+  <section id="chat">
+    <header class="chat-header">
+      <div class="chat-title">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-7 7c0 1.7.6 3.2 1.6 4.4L6 22l4.4-1.6A7 7 0 1 0 12 2z"/><path d="M9 9h6M9 12h4" stroke-linecap="round"/></svg>
+        <span>Writing Assistant</span>
+      </div>
+      <select id="modelPicker" class="model-picker" title="Choose model"></select>
+    </header>
+    <div id="chatLog" class="chat-log"></div>
+    <div class="chat-input-row">
+      <textarea id="chatInput" placeholder="Ask the assistant to write, edit, summarize…" rows="2"></textarea>
+      <button id="sendBtn" class="send-btn" title="Send">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- RIGHT: editor canvas -->
+  <main id="editor">
+    <header class="editor-header">
+      <div class="doc-title-row">
+        <button id="panelToggle" class="panel-toggle" title="Hide panels" aria-label="Hide panels" aria-pressed="false">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+        </button>
+        <input id="docTitle" type="text" placeholder="Untitled document" autocomplete="off">
+        <span id="saveStatus" class="save-status">Saved</span>
+      </div>
+
+      <div class="toolbar">
+        <div class="tb-group">
+          <select id="blockType" class="tb-select" title="Text style">
+            <option value="p">Normal text</option>
+            <option value="h1">Title</option>
+            <option value="h2">Subtitle</option>
+            <option value="h3">Heading</option>
+          </select>
+          <select id="fontName" class="tb-select" title="Font">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="'Times New Roman', serif">Times New Roman</option>
+            <option value="'Courier New', monospace">Courier New</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+          </select>
+          <select id="fontSize" class="tb-select" title="Font size">
+            <option value="2">10</option>
+            <option value="3">12</option>
+            <option value="4">14</option>
+            <option value="5">18</option>
+            <option value="6">24</option>
+            <option value="7">36</option>
+          </select>
+        </div>
+
+        <div class="tb-group">
+          <button class="tb-btn" data-cmd="bold" title="Bold (Ctrl+B)"><b>B</b></button>
+          <button class="tb-btn" data-cmd="italic" title="Italic (Ctrl+I)"><i>I</i></button>
+          <button class="tb-btn" data-cmd="underline" title="Underline (Ctrl+U)"><u>U</u></button>
+          <button class="tb-btn" data-cmd="strikeThrough" title="Strikethrough"><s>S</s></button>
+          <button class="tb-btn" data-cmd="removeFormat" title="Clear formatting">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V5h16v2M9 19h6M12 5v14"/></svg>
+          </button>
+        </div>
+
+        <div class="tb-group">
+          <button class="tb-btn" data-cmd="justifyLeft" title="Align left">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M3 10h18M3 15h12M3 20h12"/></svg>
+          </button>
+          <button class="tb-btn" data-cmd="justifyCenter" title="Align center">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M6 10h12M6 15h12M6 20h12"/></svg>
+          </button>
+          <button class="tb-btn" data-cmd="justifyRight" title="Align right">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M3 10h18M9 15h12M9 20h12"/></svg>
+          </button>
+        </div>
+
+        <div class="tb-group">
+          <button class="tb-btn" data-cmd="insertUnorderedList" title="Bulleted list">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+          </button>
+          <button class="tb-btn" data-cmd="insertOrderedList" title="Numbered list">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 6h11M10 12h11M10 18h11M4 6h1v4M4 10h2M6 18H4l2-2v-1H4"/></svg>
+          </button>
+          <button class="tb-btn" data-cmd="indent" title="Indent">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M3 19h18M11 12h10M7 9l-3 3 3 3"/></svg>
+          </button>
+          <button class="tb-btn" data-cmd="outdent" title="Outdent">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M3 19h18M11 12h10M4 9l3 3-3 3"/></svg>
+          </button>
+        </div>
+
+        <div class="tb-group">
+          <label class="tb-color" title="Text color">
+            <span class="color-glyph">A</span>
+            <input type="color" id="colorInput" value="#000000">
+          </label>
+          <button class="tb-btn" id="insertLink" title="Insert link">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>
+          </button>
+        </div>
+
+        <div class="tb-group tb-spacer">
+          <button class="tb-btn" id="undoBtn" data-cmd="undo" title="Undo (Ctrl+Z)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6M3 13a9 9 0 1 1 3 7"/></svg>
+          </button>
+          <button class="tb-btn" id="redoBtn" data-cmd="redo" title="Redo (Ctrl+Y)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6M21 13a9 9 0 1 0-3 7"/></svg>
+          </button>
+        </div>
+
+        <div class="tb-group tb-export">
+          <button id="exportBtn" class="primary-btn small" title="Export or print document">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+            Export
+          </button>
+          <div id="exportMenu" class="export-menu hidden">
+            <button data-export="pdf">Export as PDF</button>
+            <button data-export="word">Export as Word (.docx)</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="page-wrap">
+      <div class="doc">
+        <div id="editorBody" class="editor-body" contenteditable="true" spellcheck="true"></div>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<!-- Export menu backdrop -->
+<div id="menuBackdrop" class="menu-backdrop hidden"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

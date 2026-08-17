@@ -1,0 +1,12 @@
+{
+  "id": "com.mccartyii.words",
+  "name": "Words",
+  "version": "1.0.0",
+  "description": "A clean Google Docs-style word processor with rich text editing, an AI writing assistant, auto-save, and PDF/Word export.",
+  "icon": "icon.svg",
+  "entry": "index.html",
+  "width": 1200,
+  "height": 800,
+  "capabilities": ["fileAccess", "chatApi", "documents"],
+  "scopedDataKeys": ["words.docs", "words.state"]
+}
