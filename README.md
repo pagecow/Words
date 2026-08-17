@@ -2,7 +2,7 @@
 
 Click "Code" in the top right corner, then click "Download ZIP".
 
-Then drag and drop the Words.zip file into ChatOSS Apps to install and use Words in the ChatOSS desktop app.
+Then drag and drop the Words-main.zip file into ChatOSS Apps to install and use Words in the ChatOSS desktop app.
 
 Words only runs on the ChatOSS desktop app.
 
